@@ -41,8 +41,8 @@ function heroAttack() {
     $('.message #hero-message').append(heroMessage);
 
     if(antagonist.hp <= 0 ){
-        $('.main').remove()
-        let newDiv = $('<div class="card border-0" style="top: 100px;"><img src="https://images.squarespace-cdn.com/content/v1/527a5a1ee4b0a1d397624466/1631846914854-J9AL069X2ED9U3JDKLDN/victory.jpeg" alt="victory" class="mx-auto"><div class="text-center fw-bold fs-1">Поздравляем, вы выиграли</div></div>');
+        $('.container').remove()
+        let newDiv = $('<div class="container"><div class="card border-0" style="top: 100px;"><img src="https://images.squarespace-cdn.com/content/v1/527a5a1ee4b0a1d397624466/1631846914854-J9AL069X2ED9U3JDKLDN/victory.jpeg" alt="victory" class="mx-auto"><div class="text-center fw-bold fs-1">Поздравляем, вы выиграли</div></div></div>');
         $('body').append(newDiv);
     }
 }
@@ -81,8 +81,8 @@ function CompAttack() {
     }
 
     if(hero.hp <= 0 ){
-        $('.container').remove()
-        let newDiv = $('<div class="card border-0" style="top: 100px;"><img src="https://share.ftimg.com/aff/flamingtext/2020/06/14/flamingtext__26711040775136307.png" alt="victory" class="mx-auto"><div class="text-center fw-bold fs-1 text-danger">К сожаления, вы проиграли</div></div>');
+        $('.container').remove();
+        let newDiv = $('<div class="container"><div class="card border-0" style="top: 100px;"><img src="https://share.ftimg.com/aff/flamingtext/2020/06/14/flamingtext__26711040775136307.png" alt="victory" class="mx-auto"><div class="text-center fw-bold fs-1 text-danger">К сожаления, вы проиграли</div></div></div>');
         $('body').append(newDiv);
     }
 }
