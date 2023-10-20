@@ -7,7 +7,8 @@ let hero = {
     strength: parseInt($('.hero #Strength').text()),
     defence: parseInt($('.hero #Defence').text()),
     weapon: parseInt($('.hero #Weapon').text()),
-    shield:  parseInt($('.hero #Shield').text())
+    shield:  parseInt($('.hero #Shield').text()),
+    potions: parseInt($('.hero #Potions').text())
 };
 
 let antagonist = {
@@ -27,22 +28,21 @@ if (choosingComp == 0){
 function heroAttack() {
     let attackChance = getRandomInt(4);
     let damageHero = hero.strength + hero.weapon - antagonist.defence;
-
+    let heroMessage;
     if (attackChance == 0){
-        let heroMessage = $('<div class="card"><div class="card-header"><span class="fw-bold">Герой</span></div><div class="card-body">Герой не попал по антагонисту</div><div class="card-footer"></div></div>');  
-        $('.message #hero-message').append(heroMessage);
+        heroMessage = $('<div class="card"><div class="card-header"><span class="fw-bold">Герой</span></div><div class="card-body">Герой не попал по антагонисту</div><div class="card-footer"></div></div>'); 
     }
     else {
         antagonist.hp -= damageHero;
-        let heroMessage = $('<div class="card"><div class="card-header"><span class="fw-bold">Герой</span></div><div class="card-body">Герой нанес урон по антагонисту</div><div class="card-footer"></div></div>');
+        heroMessage = $('<div class="card"><div class="card-header"><span class="fw-bold">Герой</span></div><div class="card-body">Герой нанес урон по антагонисту</div><div class="card-footer"></div></div>');
         heroMessage.find('.card-footer').text('Нанесенный урон: ' + damageHero);
         $('.comp #HP').text(antagonist.hp);
-        $('.message #hero-message').append(heroMessage);
     }
+    $('.message #hero-message').append(heroMessage);
 
     if(antagonist.hp <= 0 ){
-        $('.container').remove()
-        let newDiv = $('<div class="item">Поздравляем, вы выиграли</div>');
+        $('.main').remove()
+        let newDiv = $('<div class="card border-0" style="top: 100px;"><img src="https://images.squarespace-cdn.com/content/v1/527a5a1ee4b0a1d397624466/1631846914854-J9AL069X2ED9U3JDKLDN/victory.jpeg" alt="victory" class="mx-auto"><div class="text-center fw-bold fs-1">Поздравляем, вы выиграли</div></div>');
         $('body').append(newDiv);
     }
 }
@@ -55,6 +55,22 @@ function heroDefence() {
     $('.message #hero-message').append(heroMessage);
 }
 
+function modifyHealth() {
+    let heroMessage;
+    if (hero.potions > 0){
+        hero.hp += 500;
+        hero.potions -= 1;
+        heroMessage = $('<div class="card"><div class="card-header"><span class="fw-bold">Герой</span></div><div class="card-body">Герой использоваль зелье, чтобы исцелиться</div><div class="card-footer"></div></div>');
+        heroMessage.find('.card-footer').text('ХП увеличилось на: ' + 500);
+        $('.hero #HP').text(hero.hp);
+        $('.hero #Potions').text(hero.potions);
+    }
+    else {
+        heroMessage = $('<div class="card"><div class="card-header"><span class="fw-bold">Герой</span></div><div class="card-body">У героя закончились зелья, он пропустил ход</div><div class="card-footer"></div></div>');
+    }
+    $('.message #hero-message').append(heroMessage);
+}
+
 function CompAttack() {
     let nameAntagonist = $('#comp-title').text();
     if (nameAntagonist == 'Дракон'){
@@ -63,9 +79,10 @@ function CompAttack() {
     else{
         hellAttack();
     }
+
     if(hero.hp <= 0 ){
         $('.container').remove()
-        let newDiv = $('<div class="item">К сожаления вы проиграли</div>');
+        let newDiv = $('<div class="card border-0" style="top: 100px;"><img src="https://share.ftimg.com/aff/flamingtext/2020/06/14/flamingtext__26711040775136307.png" alt="victory" class="mx-auto"><div class="text-center fw-bold fs-1 text-danger">К сожаления, вы проиграли</div></div>');
         $('body').append(newDiv);
     }
 }
@@ -139,6 +156,9 @@ function heroChoice() {
     }
     else if (selectedAction == 'Defence'){
         heroDefence();
+    }
+    else if (selectedAction == 'Health'){
+        modifyHealth();
     }
     else {
         let heroMessage = $('<div class="card"><div class="card-header"><span class="fw-bold">Герой</span></div><div class="card-body">Герой не стал атаковать антагониста</div><div class="card-footer"></div></div>');  
