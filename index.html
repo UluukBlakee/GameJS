@@ -33,7 +33,7 @@
                 <div class="col-6 d-flex flex-column">
                     <div class="card">
                         <div class="card-body">
-                            <h1 class="text-center fw-bold fs-2">Round <span id="scoreboard">1</span></h1>
+                            <h1 class="text-center fw-bold fs-2">Round <span id="scoreboard">0</span></h1>
                         </div>
                     </div>
                     <div class="message mt-4" style="height: 18rem;">
@@ -47,8 +47,16 @@
                     <div class="card choice_actions mt-auto">
                         <div class="card-body">
                             <form>
-                                 <div class="text-center">
-                                    <input type="button" id="Attack" value="Attack" class="btn btn-danger">
+                                 <div class="mb-3">
+                                    <select class="form-select" aria-label="Default select example">
+                                        <option selected>Выберите действие</option>
+                                        <option value="Attack">Атаковать</option>
+                                        <option value="Defence">Защищаться</option>
+                                        <option value="Nothing">Ничего не делать</option>
+                                    </select>
+                                </div>
+                                <div class="text-center">
+                                    <button type="submit" class="btn btn-danger text-light fw-semibold px-5" id="choice">Выбрать</button>
                                 </div>
                             </form>
                         </div>
