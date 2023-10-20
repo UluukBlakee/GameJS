@@ -10,41 +10,37 @@ let hero = {
     shield:  parseInt($('.hero #Shield').text())
 };
 
-let dragon = {
-    hp: parseInt($('.dragon #HP').text()),
-    strength: parseInt($('.dragon #Strength').text()),
-    defence: parseInt($('.dragon #Defence').text()),
-    weapon: parseInt($('.dragon #Weapon').text())
+let antagonist = {
+    hp: parseInt($('.comp #HP').text()),
+    strength: parseInt($('.comp #Strength').text()),
+    defence: parseInt($('.comp #Defence').text()),
+    weapon: parseInt($('.comp #Weapon').text())
 };
 
-let hellhound = {
-    hp: 750,
-    strength: 250,
-    defence: 50,
-    weapon: 100
-}
-
-let scoreboard = $('#scoreboard');
 let count = 1;
-let choice = $('#choice');
+let defHeroCount = hero.defence;
+let choosingComp = getRandomInt(2);
+if (choosingComp == 0){
+    hellhoundCreate();
+}
 
 function heroAttack() {
     let attackChance = getRandomInt(4);
-    let damageHero = hero.strength + hero.weapon - dragon.defence;
+    let damageHero = hero.strength + hero.weapon - antagonist.defence;
 
     if (attackChance == 0){
-        let heroMessage = $('<div class="card"><div class="card-header"><span class="fw-bold">Герой</span></div><div class="card-body">Герой не попал по дракону</div><div class="card-footer"></div></div>');  
+        let heroMessage = $('<div class="card"><div class="card-header"><span class="fw-bold">Герой</span></div><div class="card-body">Герой не попал по антагонисту</div><div class="card-footer"></div></div>');  
         $('.message #hero-message').append(heroMessage);
     }
     else {
-        dragon.hp -= damageHero;
-        let heroMessage = $('<div class="card"><div class="card-header"><span class="fw-bold">Герой</span></div><div class="card-body">Герой нанес урон по дракону</div><div class="card-footer"></div></div>');
+        antagonist.hp -= damageHero;
+        let heroMessage = $('<div class="card"><div class="card-header"><span class="fw-bold">Герой</span></div><div class="card-body">Герой нанес урон по антагонисту</div><div class="card-footer"></div></div>');
         heroMessage.find('.card-footer').text('Нанесенный урон: ' + damageHero);
-        $('.dragon #HP').text(dragon.hp);
+        $('.comp #HP').text(antagonist.hp);
         $('.message #hero-message').append(heroMessage);
     }
 
-    if(dragon.hp <= 0 ){
+    if(antagonist.hp <= 0 ){
         $('.container').remove()
         let newDiv = $('<div class="item">Поздравляем, вы выиграли</div>');
         $('body').append(newDiv);
@@ -59,22 +55,14 @@ function heroDefence() {
     $('.message #hero-message').append(heroMessage);
 }
 
-function dragonAttack() {
-    let attackChance = getRandomInt(2);
-    let damageDrag = dragon.strength + dragon.weapon - hero.defence;
-
-    if (attackChance == 0){
-        let dragMessage = $('<div class="card"><div class="card-header"><span class="fw-bold">Дракон</span></div><div class="card-body">Дракон не стал атаковать героя</div><div class="card-footer"></div></div>');  
-        $('.message #dragon-message').append(dragMessage);
+function CompAttack() {
+    let nameAntagonist = $('#comp-title').text();
+    if (nameAntagonist == 'Дракон'){
+        dragAttack();
     }
-    else {
-        hero.hp -= damageDrag;
-        let dragMessage = $('<div class="card"><div class="card-header"><span class="fw-bold">Дракон</span></div><div class="card-body">Дракон нанес урон по герою</div><div class="card-footer"></div></div>');
-        dragMessage.find('.card-footer').text('Нанесенный урон: ' + damageDrag);
-        $('.hero #HP').text(hero.hp);
-        $('.message #dragon-message').append(dragMessage);
+    else{
+        hellAttack();
     }
-
     if(hero.hp <= 0 ){
         $('.container').remove()
         let newDiv = $('<div class="item">К сожаления вы проиграли</div>');
@@ -82,15 +70,69 @@ function dragonAttack() {
     }
 }
 
-    choice.on('click', function(event) {
-    event.preventDefault();
-    scoreboard.text(count++);
-    $('.message #hero-message .card').remove();
-    $('.message #dragon-message .card').remove();
-    if (hero.defence != 50){
-        hero.defence -= hero.shield;
-        $('.hero #Defence').text(hero.defence);
+function dragAttack() {
+    let attackChance = getRandomInt(2);
+    let compMessage;
+    if (attackChance == 0){
+        compMessage = $('<div class="card"><div class="card-header"><span class="fw-bold">Дракон</span></div><div class="card-body">Дракон не стал атаковать героя</div><div class="card-footer"></div></div>');  
     }
+    else {
+        let typeAttack = getRandomInt(2);
+        if (typeAttack == 0){
+            if (hero.defence != defHeroCount){
+                    compMessage = $('<div class="card"><div class="card-header"><span class="fw-bold">Дракон</span></div><div class="card-body">Дракон атаковал огненным шаром, но герой защитился щитом</div><div class="card-footer"></div></div>');
+            }
+            else {
+                let fireballDamage = antagonist.strength * 2 - hero.defence;
+                hero.hp -= fireballDamage;
+                compMessage = $('<div class="card"><div class="card-header"><span class="fw-bold">Дракон</span></div><div class="card-body">Дракон атаковал огненным шаром</div><div class="card-footer"></div></div>');
+                compMessage.find('.card-footer').text('Нанесенный урон: ' + fireballDamage);
+            }    
+        }
+        else {
+            let damageComp = antagonist.strength + antagonist.weapon - hero.defence;
+            hero.hp -= damageComp;
+            compMessage = $('<div class="card"><div class="card-header"><span class="fw-bold">Дракон</span></div><div class="card-body">Дракон нанес урон по герою</div><div class="card-footer"></div></div>');
+            compMessage.find('.card-footer').text('Нанесенный урон: ' + damageComp);
+        }
+    }
+    $('.hero #HP').text(hero.hp);
+    $('.message #comp-message').append(compMessage);
+}
+
+function hellAttack() {
+    let attackChance = getRandomInt(2);
+    let compMessage;
+    if (attackChance == 0){
+        compMessage = $('<div class="card"><div class="card-header"><span class="fw-bold">Адская гончая</span></div><div class="card-body">Адская гончая не стал атаковать героя</div><div class="card-footer"></div></div>');  
+    }
+    else {
+        let damageComp = antagonist.strength + antagonist.weapon - hero.defence;
+        hero.hp -= damageComp;
+        compMessage = $('<div class="card"><div class="card-header"><span class="fw-bold">Адская гончая</span></div><div class="card-body">Адская гончая нанес урон по герою</div><div class="card-footer"></div></div>');
+        compMessage.find('.card-footer').text('Нанесенный урон: ' + damageComp);
+        $('.hero #HP').text(hero.hp);
+    }
+    $('.message #comp-message').append(compMessage);
+}
+
+function hellhoundCreate() {
+    let imgHellhound = 'https://illustrators.ru/uploads/illustration/image/902855/main_%D0%B0%D0%B4%D1%81%D0%BA%D0%B0%D1%8F-%D0%B3%D0%BE%D0%BD%D1%87%D0%B0%D1%8F-1-%D0%B2%D0%B8%D0%B4.jpg';
+    let img = $('#comp-img').attr('src', imgHellhound);
+    $('#comp-title').text('Адская гончая');
+    antagonist = {
+        hp: 750,
+        strength: 250,
+        defence: 50,
+        weapon: 100
+    }
+    $('.comp #HP').text(antagonist.hp);
+    $('.comp #Strength').text(antagonist.strength);
+    $('.comp #Defence').text(antagonist.defence);
+    $('.comp #Weapon').text(antagonist.weapon);
+}
+
+function heroChoice() {
     let selectedAction = $('.form-select').val();
     if (selectedAction == 'Attack'){
         heroAttack();
@@ -98,17 +140,23 @@ function dragonAttack() {
     else if (selectedAction == 'Defence'){
         heroDefence();
     }
-    else{
-        let heroMessage = $('<div class="card"><div class="card-header"><span class="fw-bold">Герой</span></div><div class="card-body">Герой не стал атаковать дракона</div><div class="card-footer"></div></div>');  
+    else {
+        let heroMessage = $('<div class="card"><div class="card-header"><span class="fw-bold">Герой</span></div><div class="card-body">Герой не стал атаковать антагониста</div><div class="card-footer"></div></div>');  
         $('.message #hero-message').append(heroMessage);
     }
-    let choosingComp = getRandomInt(2);
-    if (choosingComp == 0){
-        dragonAttack();
-    }
-    else {
+}
 
+$('#choice').on('click', function(event) {
+    event.preventDefault();
+    $('#scoreboard').text(count++);
+    $('.message #hero-message .card').remove();
+    $('.message #comp-message .card').remove();
+    if (hero.defence != defHeroCount){
+        hero.defence -= hero.shield;
+        $('.hero #Defence').text(hero.defence);
     }
+    heroChoice();
+    CompAttack();
 });
 
 
